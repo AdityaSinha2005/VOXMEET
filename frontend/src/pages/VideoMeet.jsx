@@ -34,11 +34,11 @@ export default function VideoMeetComponent() {
 
     let [audioAvailable, setAudioAvailable] = useState(true);
 
-    let [video, setVideo] = useState([]);
+    const [video,setVideo]=useState(false);
 
-    let [audio, setAudio] = useState();
+    const [audio,setAudio]=useState(false);
 
-    let [screen, setScreen] = useState();
+    const [screen,setScreen]=useState(false);
 
     let [showModal, setModal] = useState(true);
 
@@ -60,10 +60,8 @@ export default function VideoMeetComponent() {
 
 
     useEffect(() => {
-        console.log("HELLO")
         getPermissions();
-
-    })
+    }, []);
 
     let getDislayMedia = () => {
         if (screen) {
@@ -109,6 +107,9 @@ export default function VideoMeetComponent() {
                     if (localVideoref.current) {
                         localVideoref.current.srcObject = userMediaStream;
                     }
+
+                    setVideo(userMediaStream.getVideoTracks()[0]?.enabled ?? false);
+setAudio(userMediaStream.getAudioTracks()[0]?.enabled ?? false);
                 }
             }
         } catch (error) {
@@ -116,15 +117,6 @@ export default function VideoMeetComponent() {
         }
     };
 
-    useEffect(() => {
-        if (video !== undefined && audio !== undefined) {
-            getUserMedia();
-            console.log("SET STATE HAS ", video, audio);
-
-        }
-
-
-    }, [video, audio])
     let getMedia = () => {
         setVideo(videoAvailable);
         setAudio(audioAvailable);
@@ -368,13 +360,32 @@ export default function VideoMeetComponent() {
     }
 
     let handleVideo = () => {
-        setVideo(!video);
-        // getUserMedia();
+
+    if(window.localStream){
+
+        const videoTrack = window.localStream.getVideoTracks()[0];
+
+        if(videoTrack){
+            videoTrack.enabled = !videoTrack.enabled;
+            setVideo(videoTrack.enabled);
+        }
     }
-    let handleAudio = () => {
-        setAudio(!audio)
-        // getUserMedia();
+
+}
+   
+  let handleAudio = () => {
+
+    if(window.localStream){
+
+        const audioTrack = window.localStream.getAudioTracks()[0];
+
+        if(audioTrack){
+            audioTrack.enabled = !audioTrack.enabled;
+            setAudio(audioTrack.enabled);
+        }
     }
+
+}
 
     useEffect(() => {
         if (screen !== undefined) {
