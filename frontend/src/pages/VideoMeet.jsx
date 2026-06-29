@@ -42,7 +42,7 @@ export default function VideoMeetComponent() {
 
     let [showModal, setModal] = useState(true);
 
-    let [screenAvailable, setScreenAvailable] = useState();
+    let [screenAvailable, setScreenAvailable] = useState(false);
 
     let [messages, setMessages] = useState([])
 
@@ -501,13 +501,20 @@ setAudio(userMediaStream.getAudioTracks()[0]?.enabled ?? false);
                             </IconButton> : <></>}
 
                         <Badge badgeContent={newMessages} max={999} color='orange'>
-                            <IconButton onClick={() => setModal(!showModal)} style={{ color: "white" }}>
+                            <IconButton onClick={() => {if (showModal) {closeChat();} else {openChat();}}} style={{ color: "white" }}>
                                 <ChatIcon />                        </IconButton>
                         </Badge>
 
                     </div>
 
-                    <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted></video>
+                   {!showModal && (
+                    <video
+                        className={styles.meetUserVideo}
+                        ref={localVideoref}
+                        autoPlay
+                        muted
+                    />
+                )}
 
                     <div className={styles.conferenceView}>
                         {videos.map((video) => (
