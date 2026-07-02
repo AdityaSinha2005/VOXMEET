@@ -522,15 +522,13 @@ console.log(localVideoref.current.srcObject);
 
                     </div>
 
-                   {!showModal && (
-                    <video
-                        className={styles.meetUserVideo}
-                        ref={localVideoref}
-                        autoPlay
-                        playsInline
-                        muted
-                    />
-                )}
+                  <video
+    className={styles.meetUserVideo}
+    ref={localVideoref}
+    autoPlay
+    playsInline
+    muted
+/>
 
                     <div className={styles.conferenceView}>
                         {videos.map((video) => (
