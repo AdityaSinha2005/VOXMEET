@@ -87,7 +87,7 @@ export const connectToSocket=(server)=>
             })
          }
       })
-      socket.on("disconnect",(data,sender)=>{
+      socket.on("disconnect",()=>{
          var diffTime=Math.abs(timeOnline[socket.id]-new Date())
          var key //for storing room name
          for(const [k,v] of JSON.parse(JSON.stringify(Object.entries(connections)))) //object ko arrays mah convert kar dega
@@ -102,11 +102,14 @@ export const connectToSocket=(server)=>
                      io.to(connections[key][a]).emit('user-left',socket.id);
                   }
                   var index =connections[key].indexOf(socket.id)
-                  connections[key].splice(index,1)
+                  if(index !== -1){
+                     connections[key].splice(index,1);
+                  }
                   if(connections[key].length ===0)
                   {
                      delete connections[key] // room he empty so delete that room
                   }
+                  delete timeOnline[socket.id];
                }
             }
          }

@@ -117,20 +117,37 @@ setAudio(userMediaStream.getAudioTracks()[0]?.enabled ?? false);
         }
     };
 
-    let getMedia = () => {
-        setVideo(videoAvailable);
-        setAudio(audioAvailable);
-        connectToSocketServer();
+   let getMedia = async () => {
+    setVideo(videoAvailable);
+    setAudio(audioAvailable);
 
-    }
+    const stream = await navigator.mediaDevices.getUserMedia({
+        video: videoAvailable,
+        audio: audioAvailable
+    });
+
+    getUserMediaSuccess(stream);
+
+    connectToSocketServer();
+}
 
     let getUserMediaSuccess = (stream) => {
         try {
             window.localStream.getTracks().forEach(track => track.stop())
         } catch (e) { console.log(e) }
+        console.log("Tracks:", stream.getTracks());
+console.log("Video Tracks:", stream.getVideoTracks());
+console.log("Enabled:", stream.getVideoTracks()[0]?.enabled);
+        window.localStream = stream;
 
-        window.localStream = stream
-        localVideoref.current.srcObject = stream
+        if (localVideoref.current) {
+            localVideoref.current.srcObject = stream;
+            console.log(localVideoref.current);
+console.log(localVideoref.current.srcObject);
+            localVideoref.current.onloadedmetadata = () => {
+                localVideoref.current.play().catch(console.error);
+            };
+        }
 
         for (let id in connections) {
             if (id === socketIdRef.current) continue
@@ -435,7 +452,9 @@ setAudio(userMediaStream.getAudioTracks()[0]?.enabled ?? false);
 
     let connect = () => {
         setAskForUsername(false);
+        setTimeout(() => {
         getMedia();
+    }, 200);
     }
 
     return (
