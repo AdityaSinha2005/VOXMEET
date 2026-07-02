@@ -40,7 +40,7 @@ export default function VideoMeetComponent() {
 
     const [screen,setScreen]=useState(false);
 
-    let [showModal, setModal] = useState(true);
+    let [showModal, setModal] = useState(false);
 
     let [screenAvailable, setScreenAvailable] = useState(false);
 
@@ -446,10 +446,6 @@ setAudio(userMediaStream.getAudioTracks()[0]?.enabled ?? false);
                     <h2>Enter into Lobby </h2>
                     <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" />
                     <Button variant="contained" onClick={connect}>Connect</Button>
-                    <div>
-                        <video ref={localVideoref} autoPlay muted></video>
-                    </div>
-
                 </div> :
 
                 <div className={styles.meetVideoContainer}>
@@ -512,6 +508,7 @@ setAudio(userMediaStream.getAudioTracks()[0]?.enabled ?? false);
                         className={styles.meetUserVideo}
                         ref={localVideoref}
                         autoPlay
+                        playsInline
                         muted
                     />
                 )}
